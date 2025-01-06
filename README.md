@@ -1,4 +1,4 @@
-# todov2
+# Contacts
 Simple Todo App Build with golang and nextjs
 # Running
 In Development mode

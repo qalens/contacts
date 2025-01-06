@@ -57,9 +57,6 @@ func CORSMiddleware() gin.HandlerFunc {
 	}
 }
 
-type CreateTodo struct {
-	Title string `json:"title"`
-}
 type CreateUser struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
@@ -109,18 +106,19 @@ func setupRouter() *gin.Engine {
 		}
 	})
 	r.GET("/todo", Authorize, func(ctx *gin.Context) {
+		q := ctx.Query("q")
 		user := ctx.MustGet("currentUser").(db.User)
-		if todos, e := user.GetTodos(db.DB()); e == nil {
+		if todos, e := user.GetContacts(db.DB(), q); e == nil {
 			ctx.JSON(http.StatusOK, gin.H{"status": "success", "data": todos, "message": "success"})
 		} else {
 			ctx.JSON(http.StatusBadRequest, gin.H{"status": "failure", "data": e.Error(), "message": "Bad request"})
 		}
 	})
 	r.POST("/todo", Authorize, func(ctx *gin.Context) {
-		var todoBody CreateTodo
+		var todoBody db.CreateContact
 		ctx.ShouldBindBodyWithJSON(&todoBody)
 		user := ctx.MustGet("currentUser").(db.User)
-		if todo, e := user.CreateTodo(db.DB(), todoBody.Title); e == nil {
+		if todo, e := user.CreateContact(db.DB(), todoBody); e == nil {
 			ctx.JSON(http.StatusCreated, gin.H{"status": "success", "data": todo, "message": "Todo created"})
 		} else {
 			ctx.JSON(http.StatusBadRequest, gin.H{"status": "failure", "data": e.Error(), "message": "Bad request"})
@@ -128,11 +126,11 @@ func setupRouter() *gin.Engine {
 	})
 	r.PATCH("/todo/:id", Authorize, func(ctx *gin.Context) {
 		if Id, e := GetId(ctx); e == nil {
-			var todoBody db.UpdateTodo
+			var todoBody db.UpdateContact
 			ctx.ShouldBindBodyWithJSON(&todoBody)
 			if e := todoBody.Validate(); e == nil {
 				user := ctx.MustGet("currentUser").(db.User)
-				if todo, e := user.UpdateTodo(db.DB(), Id, todoBody); e == nil {
+				if todo, e := user.UpdateContact(db.DB(), Id, todoBody); e == nil {
 					ctx.JSON(http.StatusOK, gin.H{"status": "success", "data": todo, "message": "Todo updated"})
 				} else {
 					ctx.JSON(http.StatusNotFound, gin.H{"status": "failure", "data": e.Error(), "message": "Not found"})
@@ -147,7 +145,7 @@ func setupRouter() *gin.Engine {
 	r.DELETE("/todo/:id", Authorize, func(ctx *gin.Context) {
 		if Id, e := GetId(ctx); e == nil {
 			user := ctx.MustGet("currentUser").(db.User)
-			if e := user.DeleteTodo(db.DB(), Id); e == nil {
+			if e := user.DeleteContact(db.DB(), Id); e == nil {
 				ctx.JSON(http.StatusOK, gin.H{"status": "success", "data": Id, "message": "Todo deleted"})
 			} else {
 				ctx.JSON(http.StatusNotFound, gin.H{"status": "failure", "data": e.Error(), "message": "Bad request"})
