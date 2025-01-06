@@ -1,4 +1,4 @@
-module github.com/qalens/todov2
+module github.com/qalens/contactv2
 
 go 1.23.4
 

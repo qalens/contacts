@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation';
 
 import Header from "@/components/header";
 import { siteConfig } from "@/config/site";
-import { getAllTodos } from "@/services/todo";
+import { getAllContacts } from "@/services/contact";
 import { cookies } from "next/headers";
 export const metadata: Metadata = {
     title: {
@@ -35,11 +35,11 @@ export default async function RootLayout({
     if (!token) {
         redirect("/login")
     } else {
-        const todos = await getAllTodos(store.get('token')?.value!!)
+        const contacts = await getAllContacts(store.get('token')?.value!!)
 
         return (
             <>
-                <Header todos={todos} />
+                <Header contacts={contacts} />
                 <div className="container mx-auto max-w-7xl p-6 flex-grow border my-2 rounded-xl ">
                     {children}
                 </div>

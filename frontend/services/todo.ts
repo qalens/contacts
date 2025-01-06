@@ -1,7 +1,7 @@
 import { getBaseURL } from "@/lib/helper";
 
-export async function createTodo(title:string){
-    const resp=await fetch(`${getBaseURL()}/todo`,{
+export async function createContact(title:string){
+    const resp=await fetch(`${getBaseURL()}/contact`,{
         method:'POST',
         body:JSON.stringify({title})
     })
@@ -12,13 +12,13 @@ export async function createTodo(title:string){
         throw Error(body.message+" "+body.data)
     }
 }
-export async function deleteTodo(id:number){
-    return fetch(`${getBaseURL()}/todo/${id}`,{
+export async function deleteContact(id:number){
+    return fetch(`${getBaseURL()}/contact/${id}`,{
         method:'DELETE',
     })
 }
-export async function getAllTodos(token:string){
-    const resp=await fetch(`${getBaseURL()}/todo`,{
+export async function getAllContacts(token:string){
+    const resp=await fetch(`${getBaseURL()}/contact`,{
         headers:{
             'Authorization':`Bearer ${token}`
         }

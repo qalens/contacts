@@ -7,8 +7,8 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/qalens/todov2/db"
-	"github.com/qalens/todov2/service"
+	"github.com/qalens/contactv2/db"
+	"github.com/qalens/contactv2/service"
 )
 
 func Authorize(ctx *gin.Context) {
@@ -105,33 +105,33 @@ func setupRouter() *gin.Engine {
 			ctx.JSON(http.StatusBadRequest, gin.H{"status": "failure", "data": e.Error(), "message": "Bad request"})
 		}
 	})
-	r.GET("/todo", Authorize, func(ctx *gin.Context) {
+	r.GET("/contact", Authorize, func(ctx *gin.Context) {
 		q := ctx.Query("q")
 		user := ctx.MustGet("currentUser").(db.User)
-		if todos, e := user.GetContacts(db.DB(), q); e == nil {
-			ctx.JSON(http.StatusOK, gin.H{"status": "success", "data": todos, "message": "success"})
+		if contacts, e := user.GetContacts(db.DB(), q); e == nil {
+			ctx.JSON(http.StatusOK, gin.H{"status": "success", "data": contacts, "message": "success"})
 		} else {
 			ctx.JSON(http.StatusBadRequest, gin.H{"status": "failure", "data": e.Error(), "message": "Bad request"})
 		}
 	})
-	r.POST("/todo", Authorize, func(ctx *gin.Context) {
-		var todoBody db.CreateContact
-		ctx.ShouldBindBodyWithJSON(&todoBody)
+	r.POST("/contact", Authorize, func(ctx *gin.Context) {
+		var contactBody db.CreateContact
+		ctx.ShouldBindBodyWithJSON(&contactBody)
 		user := ctx.MustGet("currentUser").(db.User)
-		if todo, e := user.CreateContact(db.DB(), todoBody); e == nil {
-			ctx.JSON(http.StatusCreated, gin.H{"status": "success", "data": todo, "message": "Todo created"})
+		if contact, e := user.CreateContact(db.DB(), contactBody); e == nil {
+			ctx.JSON(http.StatusCreated, gin.H{"status": "success", "data": contact, "message": "Contact created"})
 		} else {
 			ctx.JSON(http.StatusBadRequest, gin.H{"status": "failure", "data": e.Error(), "message": "Bad request"})
 		}
 	})
-	r.PATCH("/todo/:id", Authorize, func(ctx *gin.Context) {
+	r.PATCH("/contact/:id", Authorize, func(ctx *gin.Context) {
 		if Id, e := GetId(ctx); e == nil {
-			var todoBody db.UpdateContact
-			ctx.ShouldBindBodyWithJSON(&todoBody)
-			if e := todoBody.Validate(); e == nil {
+			var contactBody db.UpdateContact
+			ctx.ShouldBindBodyWithJSON(&contactBody)
+			if e := contactBody.Validate(); e == nil {
 				user := ctx.MustGet("currentUser").(db.User)
-				if todo, e := user.UpdateContact(db.DB(), Id, todoBody); e == nil {
-					ctx.JSON(http.StatusOK, gin.H{"status": "success", "data": todo, "message": "Todo updated"})
+				if contact, e := user.UpdateContact(db.DB(), Id, contactBody); e == nil {
+					ctx.JSON(http.StatusOK, gin.H{"status": "success", "data": contact, "message": "Contact updated"})
 				} else {
 					ctx.JSON(http.StatusNotFound, gin.H{"status": "failure", "data": e.Error(), "message": "Not found"})
 				}
@@ -142,11 +142,11 @@ func setupRouter() *gin.Engine {
 			ctx.JSON(http.StatusNotFound, gin.H{"status": "failure", "data": e.Error(), "message": "Not found"})
 		}
 	})
-	r.DELETE("/todo/:id", Authorize, func(ctx *gin.Context) {
+	r.DELETE("/contact/:id", Authorize, func(ctx *gin.Context) {
 		if Id, e := GetId(ctx); e == nil {
 			user := ctx.MustGet("currentUser").(db.User)
 			if e := user.DeleteContact(db.DB(), Id); e == nil {
-				ctx.JSON(http.StatusOK, gin.H{"status": "success", "data": Id, "message": "Todo deleted"})
+				ctx.JSON(http.StatusOK, gin.H{"status": "success", "data": Id, "message": "Contact deleted"})
 			} else {
 				ctx.JSON(http.StatusNotFound, gin.H{"status": "failure", "data": e.Error(), "message": "Bad request"})
 			}

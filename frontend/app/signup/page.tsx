@@ -31,7 +31,7 @@ export default function SignUp() {
                         return false
                     }).then((success)=>{
                         if (success)
-                            redirect('/todo')
+                            redirect('/contact')
                     })
                 }
             }}>Sign Up</Button>

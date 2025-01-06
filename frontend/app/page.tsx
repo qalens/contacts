@@ -7,6 +7,6 @@ export default async function Home() {
   if (!token){
     redirect("/login")
   } else {
-    redirect("/todo")
+    redirect("/contact")
   }
 }

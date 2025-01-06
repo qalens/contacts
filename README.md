@@ -1,5 +1,5 @@
 # Contacts
-Simple Todo App Build with golang and nextjs
+Simple Contact App Build with golang and nextjs
 # Running
 In Development mode
 `docker compose -f docker-compose.dev.yml up --build`
