@@ -5,13 +5,13 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useAtom } from "jotai";
-import { createContactAtom } from "@/state/contact";
+import { updateContactAtom } from "@/state/contact";
 import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@nextui-org/modal";
 import { Textarea } from "../ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-export default function CreateContactModal({ isOpen, onOpenChange }: { isOpen: boolean, onOpenChange: (isOpen: boolean) => void }) {
+export default function ViewEditContactModal({ isOpen, onOpenChange, contact }: { isOpen: boolean, onOpenChange: (isOpen: boolean) => void, contact: { first_name: string, last_name?: string, mobile?: string, address?: string, id: number } }) {
     const { toast } = useToast()
-    const [, createContact] = useAtom(createContactAtom)
+    const [, updateContact] = useAtom(updateContactAtom)
     const formSchema = z.object({
         first_name: z.string()
             .min(3, {
@@ -26,13 +26,11 @@ export default function CreateContactModal({ isOpen, onOpenChange }: { isOpen: b
     })
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
-        values: {
-            first_name: ''
-        },
+        values: contact,
     })
 
     function onSubmit(values: z.infer<typeof formSchema>) {
-        createContact(values).then((resp) => {
+        updateContact({ id: contact.id, ...values }).then((resp) => {
             toast({
                 title: 'Success',
                 description: resp.message,
@@ -68,7 +66,7 @@ export default function CreateContactModal({ isOpen, onOpenChange }: { isOpen: b
         <ModalContent>
             {(onClose) => (
                 <>
-                    <ModalHeader className="flex flex-col gap-1">New contact</ModalHeader>
+                    <ModalHeader className="flex flex-col gap-1">Edit contact</ModalHeader>
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)}>
                             <ModalBody>
@@ -123,7 +121,7 @@ export default function CreateContactModal({ isOpen, onOpenChange }: { isOpen: b
                                     Cancel
                                 </Button>
                                 <Button color="primary">
-                                    Create
+                                    Save
                                 </Button>
                             </ModalFooter>
                         </form>
