@@ -1,4 +1,4 @@
-module github.com/qalens/contactv2
+module github.com/qalens/contact
 
 go 1.23.4
 

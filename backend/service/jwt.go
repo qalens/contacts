@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/qalens/contactv2/db"
+	"github.com/qalens/contact/db"
 )
 
 var secretKey = []byte("MySecretSigningKey")

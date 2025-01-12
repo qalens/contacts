@@ -7,8 +7,8 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/qalens/contactv2/db"
-	"github.com/qalens/contactv2/service"
+	"github.com/qalens/contact/db"
+	"github.com/qalens/contact/service"
 )
 
 func Authorize(ctx *gin.Context) {
