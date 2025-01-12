@@ -1,9 +1,9 @@
 import { getBaseURL } from "@/lib/helper";
-
-export async function createContact(title:string){
+export type CreateContactPayload = { first_name: string,last_name?:string,mobile?:string,address?:string }
+export async function createContact(body:CreateContactPayload){
     const resp=await fetch(`${getBaseURL()}/contact`,{
         method:'POST',
-        body:JSON.stringify({title})
+        body:JSON.stringify(body)
     })
     if (resp.status==201){
         return (await resp.json()).data

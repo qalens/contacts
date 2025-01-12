@@ -2,9 +2,11 @@
 import { setBulkContactsAtom } from "@/state/contact";
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
+import { useDisclosure } from "@nextui-org/modal";
 import { useAtom } from "jotai";
 import { redirect } from "next/navigation";
 import { useEffect } from "react";
+import CreateContactModal from "./contact/create";
 const SearchIcon = (props:any) => {
     return (
       <svg
@@ -36,6 +38,7 @@ const SearchIcon = (props:any) => {
   };
 export default function Header({ contacts }: { contacts: any[] }) {
     const [, setBulkContacts] = useAtom(setBulkContactsAtom)
+    const {isOpen,onOpen,onOpenChange} = useDisclosure()
     useEffect(() => {
         setBulkContacts({ contacts })
     }, [contacts])
@@ -43,7 +46,7 @@ export default function Header({ contacts }: { contacts: any[] }) {
         <Input className="grow"
         startContent={<SearchIcon/>}
         />
-        <Button color="primary">Add</Button>
+        <Button color="primary" onPress={onOpen}>Add</Button>
         <Button
             color="danger"
             onPress={() => {
@@ -51,5 +54,6 @@ export default function Header({ contacts }: { contacts: any[] }) {
                 redirect("/")
 
             }}>Logout</Button>
+            <CreateContactModal isOpen={isOpen} onOpenChange={onOpenChange}/>
     </div>
 }

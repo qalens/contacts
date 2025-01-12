@@ -12,12 +12,10 @@ export default function List() {
         </ListboxItem>)}
     </Listbox>
 }
-function SingleContact({ title, status, id }: { title: string, status: string, id: number }) {
+function SingleContact({ first_name,last_name,mobile, id }: { first_name: string,last_name?:string,mobile?:string, id: number }) {
     const [,deleteContact] = useAtom(deleteContactAtom)
-    return <div className="flex flex-row items-center justify-left">
-        <div className="grow">{title}</div>
-        <div><Button onClick={() => {
-            deleteContact({id})
-        }} color="danger">Delete</Button></div>
+    return <div className="p-1 flex flex-row items-center justify-left gap-3">
+        <div className="text-xl">{first_name}{last_name?" "+last_name:""}</div>
+        <div>{mobile?mobile:""}</div>
     </div>
 }

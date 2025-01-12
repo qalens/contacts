@@ -1,4 +1,4 @@
-import { createContact, deleteContact } from "@/services/contact";
+import { createContact, CreateContactPayload, deleteContact } from "@/services/contact";
 import { atom } from "jotai";
 
 export const contactsAtom = atom<Record<number,any>>({})
@@ -11,8 +11,8 @@ export const setBulkContactsAtom = atom(null, (get, set, payload: {contacts:any[
     console.log("Val",contactsVal)
     set(contactsAtom, contactsVal)
 })
-export const createContactAtom = atom(null, async (get, set, payload: { first_name: string }) => {
-    const contact = await createContact(payload.first_name)
+export const createContactAtom = atom(null, async (get, set, payload: CreateContactPayload ) => {
+    const contact = await createContact(payload)
     const contactsVal={...get(contactsAtom)}
     contactsVal[contact.id]=contact
     set(contactsAtom, contactsVal)
