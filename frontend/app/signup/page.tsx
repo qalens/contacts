@@ -6,9 +6,11 @@ import { Input } from "@nextui-org/input";
 import Link from "next/link";
 import { useState } from "react";
 import {redirect} from 'next/navigation'
+import { useToast } from "@/hooks/use-toast";
 export default function SignUp() {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
+    const {toast}=useToast()
     const [confirmPassword, setConfirmPassword] = useState('')
     return <Card className="w-[400px] mx-auto">
         <CardHeader>Sign Up</CardHeader>
@@ -27,7 +29,11 @@ export default function SignUp() {
                         document.cookie = `token=${token}; path=/; secure; samesite=strict; expires=${expiryDate.toUTCString()}`;
                         return true
                     }).catch(e => {
-                        alert(e)
+                        toast({
+                            title:'Failure',
+                            description: e.message,
+                            variant:'destructive'
+                        })
                         return false
                     }).then((success)=>{
                         if (success)

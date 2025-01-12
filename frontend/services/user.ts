@@ -1,3 +1,4 @@
+import { useToast } from "@/hooks/use-toast";
 import { getBaseURL } from "@/lib/helper";
 
 export async function signup(username:string,password:string){
@@ -9,7 +10,7 @@ export async function signup(username:string,password:string){
         return (await resp.json()).data
     } else {
         const body=await resp.json()
-        throw Error(body.message+" "+body.data)
+        throw Error(body.data)
     }
 }
 export async function login(username:string,password:string){

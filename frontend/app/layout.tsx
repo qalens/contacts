@@ -2,6 +2,7 @@ import "@/styles/globals.css";
 import { Metadata, Viewport } from "next";
 import { Link } from "@nextui-org/link";
 import clsx from "clsx";
+import { Toaster } from "@/components/ui/toaster"
 
 import { Providers } from "./providers";
 
@@ -45,6 +46,7 @@ export default function RootLayout({
             <main className="container mx-auto max-w-7xl pt-16 px-6 flex-grow">
               {children}
             </main>
+            <Toaster />
           </div>
         </Providers>
       </body>
