@@ -6,41 +6,51 @@ import { useAtom, useAtomValue } from "jotai";
 import ViewEdit from "./viewedit";
 import { Button } from "../ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { useEffect, useState } from "react";
 export default function List() {
     const currentContacts = useAtomValue(contactsAtom)
+    const [selected, setSelected] = useState<number | null>(null)
     console.log(JSON.stringify(currentContacts))
-    return <Listbox>
-        {Object.entries(currentContacts).map(([_, contact]) => <ListboxItem key={contact.id} id={"" + contact.id}>
-            <SingleContact {...contact} />
-        </ListboxItem>)}
-    </Listbox>
+    return <ul className="flex flex-col gap-2">
+        {Object.entries(currentContacts).map(([_, contact]) => <li key={contact.id} id={"" + contact.id} className={"hover:bg-slate-700 border rounded-xl p-1 " + (selected == contact.id ? "bg-slate-700" : "")}>
+            <SingleContact contact={contact} onEditOpenChange={(isOpen) => {
+                if (isOpen) setSelected(contact.id)
+                else setSelected(null)
+            }} />
+        </li>)}
+    </ul>
 }
-function SingleContact(contact: { first_name: string, last_name?: string, mobile?: string, id: number }) {
+function SingleContact({ contact, onEditOpenChange }: { contact: { first_name: string, last_name?: string, mobile?: string, id: number }, onEditOpenChange: (isOpen: boolean) => void }) {
     const { toast } = useToast()
     const [, deleteContact] = useAtom(deleteContactAtom)
     const { isOpen, onOpen, onOpenChange } = useDisclosure()
-    return <div className="p-1 flex flex-row items-center justify-left" onClick={onOpen}>
-        <div className="flex-row items-center justify-left gap-3 grow">
-            <div className="text-xl">{contact.first_name}{contact.last_name ? " " + contact.last_name : ""}</div>
-            <div>{contact.mobile ? contact.mobile : ""}</div>
+    useEffect(() => {
+        onEditOpenChange(isOpen)
+    }, [isOpen])
+    return <>
+        <div className="p-1 flex flex-row items-center justify-left" onClick={onOpen}>
+            <div className="flex flex-row items-center justify-left gap-3 grow">
+                <div className="text-xl">{contact.first_name}{contact.last_name ? " " + contact.last_name : ""}</div>
+                <div>{contact.mobile ? contact.mobile : ""}</div>
+            </div>
+            <Button onClick={() => {
+                deleteContact({ id: contact.id })
+                    .then((resp) => {
+                        toast({
+                            title: 'Success',
+                            description: resp.message,
+                        })
+                        return true
+                    }).catch(e => {
+                        toast({
+                            title: 'Failure',
+                            description: e.message,
+                            variant: 'destructive'
+                        })
+                        return false
+                    })
+            }}>Delete</Button>
         </div>
-        <Button onClick={() => {
-            deleteContact({ id: contact.id })
-                .then((resp) => {
-                    toast({
-                        title: 'Success',
-                        description: resp.message,
-                    })
-                    return true
-                }).catch(e => {
-                    toast({
-                        title: 'Failure',
-                        description: e.message,
-                        variant: 'destructive'
-                    })
-                    return false
-                })
-        }}>Delete</Button>
         <ViewEdit contact={contact} isOpen={isOpen} onOpenChange={onOpenChange} />
-    </div>
+    </>
 }
