@@ -9,8 +9,8 @@ import { getAllContacts } from "@/services/contact";
 import { cookies } from "next/headers";
 export const metadata: Metadata = {
     title: {
-        default: siteConfig.name,
-        template: `%s - ${siteConfig.name}`,
+        default: siteConfig.pages.home.title,
+        template: `${siteConfig.pages.home.title} - %s`,
     },
     description: siteConfig.description,
     icons: {

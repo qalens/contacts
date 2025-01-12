@@ -7,13 +7,13 @@ import { redirect } from "next/navigation";
 import { useState } from "react";
 
 export default function Create() {
-    const [title,setTitle] = useState('')
+    const [first_name,setFirstName] = useState('')
     const [,createContact] = useAtom(createContactAtom)
     return <div className="flex flex-row gap-2 p-2">
-        <Input placeholder="Contact Title" className="grow" value={title} onChange={(e)=>{setTitle(e.target.value)}}/>
+        <Input placeholder="Contact FirstName" className="grow" value={first_name} onChange={(e)=>{setFirstName(e.target.value)}}/>
         <Button color="primary" onClick={()=>{
-            createContact({title}).then(()=>{
-                setTitle('')
+            createContact({first_name}).then(()=>{
+                setFirstName('')
             })
         }}>Add</Button>
     </div>

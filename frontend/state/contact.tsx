@@ -11,8 +11,8 @@ export const setBulkContactsAtom = atom(null, (get, set, payload: {contacts:any[
     console.log("Val",contactsVal)
     set(contactsAtom, contactsVal)
 })
-export const createContactAtom = atom(null, async (get, set, payload: { title: string }) => {
-    const contact = await createContact(payload.title)
+export const createContactAtom = atom(null, async (get, set, payload: { first_name: string }) => {
+    const contact = await createContact(payload.first_name)
     const contactsVal={...get(contactsAtom)}
     contactsVal[contact.id]=contact
     set(contactsAtom, contactsVal)

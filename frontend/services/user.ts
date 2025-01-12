@@ -22,6 +22,6 @@ export async function login(username:string,password:string){
         return (await resp.json()).data
     } else {
         const body=await resp.json()
-        throw Error(body.message+" "+body.data)
+        throw Error(body.data)
     }
 }
