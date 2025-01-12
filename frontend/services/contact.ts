@@ -37,8 +37,8 @@ export async function deleteContact(id:number){
         throw Error(body.data)
     }
 }
-export async function getAllContacts(token:string){
-    const resp=await fetch(`${getBaseURL()}/contact`,{
+export async function getAllContacts(token:string,q:string){
+    const resp=await fetch(`${getBaseURL()}/contact?q=${q}`,{
         headers:{
             'Authorization':`Bearer ${token}`
         }

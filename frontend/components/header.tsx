@@ -5,7 +5,7 @@ import { Input } from "@nextui-org/input";
 import { useDisclosure } from "@nextui-org/modal";
 import { useAtom } from "jotai";
 import { redirect } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import CreateContactModal from "./contact/create";
 const SearchIcon = (props:any) => {
     return (
@@ -36,7 +36,8 @@ const SearchIcon = (props:any) => {
       </svg>
     );
   };
-export default function Header({ contacts }: { contacts: any[] }) {
+export default function Header({ q,contacts }: { contacts: any[],q:string }) {
+    const [query,setQuery] = useState(q)
     const [, setBulkContacts] = useAtom(setBulkContactsAtom)
     const {isOpen,onOpen,onOpenChange} = useDisclosure()
     useEffect(() => {
@@ -45,6 +46,13 @@ export default function Header({ contacts }: { contacts: any[] }) {
     return <div className="flex flex-row gap-2 items-center justify-left">
         <Input className="grow"
         startContent={<SearchIcon/>}
+        value={query}
+        onChange={(e)=>setQuery(e.target.value)}
+        onKeyUp={(e)=>{
+          if (e.key==="Enter"){
+            redirect(`/contact?q=${query}`)
+          }
+        }}
         />
         <Button color="primary" onPress={onOpen}>Add</Button>
         <Button
